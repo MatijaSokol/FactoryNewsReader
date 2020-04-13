@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Factory News Reader</string>
+    <string name="published">Objavljeno:</string>
+    <string name="yes">DA</string>
+    <string name="no">NE</string>
+    <string name="ok">U redu</string>
+    <string name="more_on">Više na:</string>
+    <string name="error">Greška</string>
+    <string name="status_code">Status kod</string>
+    <string name="no_internet_connection">Nema internet veze</string>
+    <string name="unknown">Nepoznato</string>
+    <string name="request_failed">Zahtjev nije uspio…</string>
+    <string name="something_went_wrong">Nešto je pošlo po krivu</string>
+    <string name="author">Autor:</string>
+</resources>
