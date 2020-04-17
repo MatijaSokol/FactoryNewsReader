@@ -18,6 +18,7 @@ import hr.ferit.matijasokol.factorynewsreader.ui.adapters.NewsItemAdapter
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
+import java.lang.Exception
 
 class MainActivity : BaseActivity(R.layout.activity_main), MainActivityContract.View {
 
@@ -80,8 +81,8 @@ class MainActivity : BaseActivity(R.layout.activity_main), MainActivityContract.
             Log.d(TAG, "onRequestReponseOk: new data set")
             newsAdapter.setData(newsResponse.news)
             presenter.saveDataToRepostiory(newsResponse.news)
+            presenter.setNewFetchTime()
         }
-        presenter.setNewFetchTime()
     }
 
     private fun checkForEmptyAdapter() {
@@ -99,8 +100,8 @@ class MainActivity : BaseActivity(R.layout.activity_main), MainActivityContract.
         showAlertDialog(getString(R.string.error), getString(R.string.something_went_wrong))
     }
 
-    override fun onRequestFailed(throwable: Throwable) {
-        Log.d(TAG, "onRequestFailed: ${throwable.message}")
+    override fun onRequestFailed(exception: Exception) {
+        Log.d(TAG, "onRequestFailed: ${exception.message}")
         progressBar.gone()
         closeSwiperIfRefreshing()
         checkForEmptyAdapter()

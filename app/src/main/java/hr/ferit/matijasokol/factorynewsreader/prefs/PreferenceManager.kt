@@ -2,6 +2,11 @@ package hr.ferit.matijasokol.factorynewsreader.prefs
 
 import android.content.Context
 import hr.ferit.matijasokol.factorynewsreader.app.App
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object PreferenceManager {
 

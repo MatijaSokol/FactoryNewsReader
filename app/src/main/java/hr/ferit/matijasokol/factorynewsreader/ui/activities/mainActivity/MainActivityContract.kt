@@ -2,6 +2,8 @@ package hr.ferit.matijasokol.factorynewsreader.ui.activities.mainActivity
 
 import hr.ferit.matijasokol.factorynewsreader.model.NewsItem
 import hr.ferit.matijasokol.factorynewsreader.networking.response.NewsResponse
+import okhttp3.ResponseBody
+import java.lang.Exception
 
 interface MainActivityContract {
 
@@ -16,7 +18,7 @@ interface MainActivityContract {
     interface View {
         fun onRequestReponseOk(newsResponse: NewsResponse?)
         fun onRequestReponseWentWrong(code: Int)
-        fun onRequestFailed(throwable: Throwable)
+        fun onRequestFailed(exception: Exception)
         fun onGetDataFromRepository(data: List<NewsItem>)
         fun timeToFetchNewData()
         fun noNeedForFetchingNewData()

@@ -1,9 +1,11 @@
 package hr.ferit.matijasokol.factorynewsreader.networking.interactor
 
 import hr.ferit.matijasokol.factorynewsreader.networking.response.NewsResponse
-import retrofit2.Callback
+import kotlinx.coroutines.Deferred
+import retrofit2.Call
+import retrofit2.Response
 
 interface NewsInteractor {
 
-    fun getNews(newsCallback: Callback<NewsResponse>)
+    suspend fun getNews(): Response<NewsResponse>
 }

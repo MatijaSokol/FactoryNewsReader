@@ -1,6 +1,7 @@
 package hr.ferit.matijasokol.factorynewsreader.presenters
 
 import android.util.Log
+import androidx.room.CoroutinesRoom
 import hr.ferit.matijasokol.factorynewsreader.common.RESPONSE_OK
 import hr.ferit.matijasokol.factorynewsreader.database.repository.NewsRepositoryImpl
 import hr.ferit.matijasokol.factorynewsreader.model.NewsItem
@@ -14,6 +15,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 class MainActivityPresenter(private val view: MainActivityContract.View) : MainActivityContract.Presenter {
 
@@ -23,35 +25,32 @@ class MainActivityPresenter(private val view: MainActivityContract.View) : MainA
     override fun checkForFetchTime() {
         CoroutineScope(IO).launch {
             val lastFetchTimeSeconds = PreferenceManager.getLong(FETCH_TIME_KEY, 0L)
-            withContext(Main) {
-                val currentSeconds = System.currentTimeMillis() / 1000
 
-                if ((currentSeconds - lastFetchTimeSeconds) > 300) {
-                    Log.d(TAG, "checkForFetchTime: fetching...")
-                    view.timeToFetchNewData()
-                } else {
-                    Log.d(TAG, "checkForFetchTime: repository")
-                    view.noNeedForFetchingNewData()
-                }
+            val currentSeconds = System.currentTimeMillis() / 1000
+
+            if ((currentSeconds - lastFetchTimeSeconds) > 300) {
+                Log.d(TAG, "checkForFetchTime: fetching...")
+                withContext(Main) { view.timeToFetchNewData() }
+            } else {
+                Log.d(TAG, "checkForFetchTime: repository")
+                withContext(Main) { view.noNeedForFetchingNewData() }
+
             }
         }
     }
 
     override fun startNetworking() {
-        NewsInteractorImpl.getNews(callback)
-    }
-
-    private val callback: Callback<NewsResponse> = object : Callback<NewsResponse> {
-        override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-            view.onRequestFailed(t)
-        }
-
-        override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
-            if (response.isSuccessful) {
-                when (response.code()) {
-                    RESPONSE_OK -> view.onRequestReponseOk(response.body())
-                    else -> view.onRequestReponseWentWrong(response.code())
+        CoroutineScope(IO).launch {
+            try {
+                val response = NewsInteractorImpl.getNews()
+                if (response.isSuccessful) {
+                    when(response.code()) {
+                        RESPONSE_OK -> withContext(Main) { view.onRequestReponseOk(response.body()) }
+                        else -> withContext(Main) { view.onRequestReponseWentWrong(response.code()) }
+                    }
                 }
+            } catch (e: Exception) {
+                withContext(Main) { view.onRequestFailed(e) }
             }
         }
     }
@@ -59,9 +58,7 @@ class MainActivityPresenter(private val view: MainActivityContract.View) : MainA
     override fun getDataFromRepository(){
         CoroutineScope(IO).launch {
             val data = NewsRepositoryImpl.getAll()
-            withContext(Main) {
-                view.onGetDataFromRepository(data)
-            }
+            withContext(Main) { view.onGetDataFromRepository(data) }
         }
     }
 
